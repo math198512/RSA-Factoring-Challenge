@@ -5,8 +5,9 @@ import time
 def factorize(number):
     for i in range(2, int(num**0.5)+1):
         if num % i == 0:
-            return (i, nuù//i)
+            return (i, num//i)
     return None
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: factors <file>")
@@ -21,13 +22,13 @@ if __name__ == "__main__":
         print("File not found")
         exit()
 
-    strat_time = time.time()
+    start_time = time.time()
 
     for line in lines:
         num = int(line.strip())
         factors = factorize(num)
         if factors:
-            print(f"{num}={factors[0]*factors[1]}")
+            print(f"{num}={factors[0]}*{factors[1]}")
 
         if time.time() - start_time > 5:
             print("Time limit exceeded")
