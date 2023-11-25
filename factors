@@ -1,53 +1,38 @@
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
+#!/usr/bin/python3
+""" Factor numbers """
+from sys import argv
+from math import sqrt
 
-void factory(int num) {
-    if (num % 2 == 0) {
-        int i = 2;
-        printf("%d=%d*%d\n", num, num / i, i);
-    } else {
-        int sq = floor(sqrt(num)) + 1;
-        for (int i = 3; i < sq; i += 2) {
-            if (num % i == 0) {
-                printf("%d=%d*%d\n", num, num / i, i);
-                return;
-            }
-            if (num % (sq + i) == 0) {
-                printf("%d=%d*%d\n", num, sq + i, num / (sq + i));
-                return;
-            }
-            if (num % (sq - i) == 0) {
-                printf("%d=%d*%d\n", num, sq - i, num / (sq - i));
-                return;
-            }
-        }
-    }
-}
 
-void factors(const char *filename) {
-    FILE *my_file = fopen(filename, "r");
-    if (my_file == NULL) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
-    }
+def open_read_file(file_name):
+    """read from file
+    add to array
+    """
+    with open(file_name, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+    number_to_factor = []
+    for line in lines:
+        number_to_factor.append(int(line))
+    return number_to_factor
 
-    char line[256];
-    while (fgets(line, sizeof(line), my_file) != NULL) {
-        int n = atoi(line);
-        factory(n);
-    }
 
-    fclose(my_file);
-}
+def find_and_times(n):
+    """factor each
+    n given
+    """
+    for i in range(1, n):
+        if n == ((n // i) * i):
+            print("{}={}*{}".format(n, (n // i), i))
+            break
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
 
-    factors(argv[1]);
+def fac_list(ls):
+    """factor each
+    num in ls
+    """
+    for i in ls:
+        find_and_times(i)
 
-    return 0;
-}
+
+if len(argv) == 2:
+    fac_list(open_read_file(argv[1]))
