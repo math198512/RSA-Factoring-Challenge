@@ -1,36 +1,54 @@
-#!/usr/bin/python3
-from sys import argv
-import math
-"""Factorize as many numbers as possible into a product of 2 smaller nums"""
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
 
+void factory(int num) {
+    if (num % 2 == 0) {
+        int i = 2;
+        printf("%d=%d*%d\n", num, num / i, i);
+    } else {
+        int sq = floor(sqrt(num)) + 1;
+        for (int i = 3; i < sq; i += 2) {
+            if (num % i == 0) {
+                printf("%d=%d*%d\n", num, num / i, i);
+                return;
+            }
+            if (num % (sq + i) == 0) {
+                printf("%d=%d*%d\n", num, sq + i, num / (sq + i));
+                return;
+            }
+            if (num % (sq - i) == 0) {
+                printf("%d=%d*%d\n", num, sq - i, num / (sq - i));
+                return;
+            }
+        }
+    }
+}
 
-def factory(num):
-    """gets the factors of a number"""
-    if num % 2 == 0:
-        i = 2
-        print("{}={}*{}".format(num, int(num//i), i))
-    else:
-        sq = int(math.sqrt(num)) + 1
-        for i in range(3, sq, +2):
-            if num % i == 0:
-                print("{}={}*{}".format(num, int(num//i), i))
-                return
-            if num % (sq + i) == 0:
-                print("{}={}*{}".format(num, sq + i, int(num//(sq + i))))
-                return
-            if num % (sq - i) == 0:
-                print("{}={}*{}".format(num, sq - 1, int(num//(sq - i))))
-                return
+void factors(const char *filename) {
+    FILE *my_file = fopen(filename, "r");
+    if (my_file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
 
+    char line[256];
+    while (fgets(line, sizeof(line), my_file) != NULL) {
+        int n = atoi(line);
+        factory(n);
+    }
 
-def factors(filename):
-    """read_file and prints them out"""
+    fclose(my_file);
+}
 
-    with open(filename, encoding="utf-8") as my_file:
-        for i in my_file.readlines():
-            n = int(i)
-            result = factory(n)
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
 
+    factors(argv[1]);
 
-if __name__ == "__main__":
-    factors(argv[1])
+    return 0;
+}
+
